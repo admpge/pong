@@ -39,6 +39,15 @@ def draw_ball(x, y):
 def draw_paddle(x, y):
     pygame.draw.rect(screen, white, (x, y, paddle_width, paddle_height))
 
+def ai_movement(paddle_y, ball_y):
+    """Simple AI strategy to align the paddle with the ball"""
+    if paddle_y + paddle_height // 2 < ball_y:  # If paddle center is below the ball
+        return paddle_speed  # Move down
+    elif paddle_y + paddle_height // 2 > ball_y:  # If paddle center is above the ball
+        return -paddle_speed  # Move up
+    else:
+        return 0  # Stay in place
+
 # Main game loop
 running = True
 while running:
@@ -69,10 +78,13 @@ while running:
         paddle1_y += paddle_speed
 
     # Player 2 Controls (Optional: Can be replaced with AI or second player controls)
-    if keys[pygame.K_UP] and paddle2_y > 0:
-        paddle2_y -= paddle_speed
-    if keys[pygame.K_DOWN] and paddle2_y < screen_height - paddle_height:
-        paddle2_y += paddle_speed
+    # if keys[pygame.K_UP] and paddle2_y > 0:
+    #     paddle2_y -= paddle_speed
+    # if keys[pygame.K_DOWN] and paddle2_y < screen_height - paddle_height:
+    #     paddle2_y += paddle_speed
+        
+    # AI Movement
+    paddle2_y += ai_movement(paddle2_y, ball_y)
 
     # Update ball position
     ball_x += ball_dx
