@@ -1,4 +1,9 @@
 import pygame
+import time
+import random
+
+ai_reaction_time = time.time()  # Time when the AI should react
+ai_reaction_delay = 0.07  # Adjust for desired delay (in seconds)
 
 # Initialize the game
 pygame.init()
@@ -40,13 +45,21 @@ def draw_paddle(x, y):
     pygame.draw.rect(screen, white, (x, y, paddle_width, paddle_height))
 
 def ai_movement(paddle_y, ball_y):
-    """Simple AI strategy to align the paddle with the ball"""
-    if paddle_y + paddle_height // 2 < ball_y:  # If paddle center is below the ball
-        return paddle_speed  # Move down
-    elif paddle_y + paddle_height // 2 > ball_y:  # If paddle center is above the ball
-        return -paddle_speed  # Move up
+    """AI strategy with more efficient delay handling"""
+    global ai_reaction_time
+
+    if time.time() > ai_reaction_time:  # Check if it's time for the AI to react
+        ai_reaction_time = time.time() + ai_reaction_delay  # Schedule the next reaction
+
+        # Calculate movement direction 
+        if paddle_y + paddle_height // 2 < ball_y:
+            return paddle_speed  # Move down
+        elif paddle_y + paddle_height // 2 > ball_y:
+            return -paddle_speed  # Move up
+        else:
+            return 0  # Stay in place
     else:
-        return 0  # Stay in place
+        return 0  # Don't move yet
 
 # Main game loop
 running = True
